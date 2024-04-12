@@ -1,5 +1,3 @@
-use cs_2024_spring_3430_101_t3;
-
 drop table if exists employee, customer, warehouse, product, orders, inventory;
 
 create table employee(
@@ -104,3 +102,61 @@ SELECT * FROM orders;
 
 -- View data in the inventory table
 SELECT * FROM inventory;
+
+
+-- check quantity b4 order placed
+DELIMITER //
+DROP TRIGGER IF EXISTS check_inventory;
+CREATE TRIGGER check_inventory
+BEFORE INSERT ON orders
+FOR EACH ROW
+BEGIN
+    DECLARE product_quantity INT;
+    SELECT quantity INTO product_quantity FROM inventory WHERE productID = NEW.productID;
+    IF product_quantity < NEW.quanity THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Insufficient quantity in inventory';
+    END IF;
+END;//
+DELIMITER ;
+
+-- update the inventory after order
+DELIMITER //
+DROP TRIGGER IF EXISTS update_inventory_after_order;
+CREATE TRIGGER update_inventory_after_order
+AFTER INSERT ON orders
+FOR EACH ROW
+BEGIN
+    UPDATE inventory
+    SET quantity = quantity - NEW.quanity
+    WHERE productID = NEW.productID;
+END;//
+DELIMITER ;
+
+
+
+-- check product quantity before update
+DELIMITER //
+DROP TRIGGER IF EXISTS check_product_quantity_before_update;
+CREATE TRIGGER check_product_quantity_before_update
+BEFORE UPDATE ON inventory
+FOR EACH ROW
+BEGIN
+    IF NEW.quantity < 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Quantity cannot be negative';
+    END IF;
+END;//
+DELIMITER ;
+
+-- Check Product Quantity Before Insert
+DELIMITER //
+DROP TRIGGER IF EXISTS check_product_quantity_before_insert;
+CREATE TRIGGER check_product_quantity_before_insert
+BEFORE INSERT ON inventory
+FOR EACH ROW
+BEGIN
+    IF NEW.quantity < 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Quantity cannot be negative';
+    END IF;
+END;//
+DELIMITER ;
+
