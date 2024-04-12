@@ -7,7 +7,7 @@ create table employee(
     employeeName char(30),
     employeeRole char(30),
     employeeAddress varchar(100),
-    employeePhone int(10),
+    employeePhone int(20),
     employeeEmail varchar(30)
 );
 
@@ -15,7 +15,7 @@ create table customer(
 	customerID int(10) primary key,
     customerName char(30),
     customerAddress varchar(100),
-    customerPhone int(10),
+    customerPhone int(20),
     customerEmail varchar(30)
 );
 
@@ -55,13 +55,13 @@ create table inventory(
 
 -- Insert data into the employee table
 INSERT INTO employee VALUES
-    (1, 'John Doe', 'Manager', '123 Main St, Anytown, USA', 1234567890, 'john.doe@example.com'),
-    (2, 'Jane Smith', 'Sales Associate', '456 Elm St, Othertown, USA', 9876543210, 'jane.smith@example.com');
+    (1, 'John Doe', 'Manager', '123 Main St, Anytown, USA', 123123, 'john.doe@example.com'),
+    (2, 'Jane Smith', 'Sales Associate', '456 Elm St, Othertown, USA', 123123, 'jane.smith@example.com');
 
 -- Insert data into the customer table
 INSERT INTO customer VALUES
-    (1, 'Alice Johnson', '789 Maple Ave, Anycity, USA', 2345678901, 'alice.johnson@example.com'),
-    (2, 'Bob Brown', '101 Oak St, Othercity, USA', 8901234567, 'bob.brown@example.com');
+    (1, 'Alice Johnson', '789 Maple Ave, Anycity, USA', 81324, 'alice.johnson@example.com'),
+    (2, 'Bob Brown', '101 Oak St, Othercity, USA', 9183782, 'bob.brown@example.com');
 
 -- Insert data into the warehouse table
 INSERT INTO warehouse VALUES
