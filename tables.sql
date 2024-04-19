@@ -158,5 +158,37 @@ BEGIN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Quantity cannot be negative';
     END IF;
 END;//
+
+
 DELIMITER ;
 
+DELIMITER //
+
+CREATE TRIGGER update_product_quantity
+AFTER INSERT ON orders
+FOR EACH ROW
+BEGIN
+    UPDATE product
+    SET productQuantity = productQuantity - NEW.quantity
+    WHERE productID = NEW.productID;
+END;
+//
+
+DELIMITER ;
+
+
+DELIMITER //
+
+CREATE TRIGGER update_customer_order_count
+AFTER INSERT ON orders
+FOR EACH ROW
+BEGIN
+    UPDATE customer
+    SET customerOrderCount = customerOrderCount + 1
+    WHERE customerID = (
+        SELECT customerID FROM product WHERE productID = NEW.productID
+    );
+END;
+//
+
+DELIMITER ;
