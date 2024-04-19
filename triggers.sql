@@ -53,3 +53,29 @@ begin
     end if;
 end//
 delimiter ;
+
+-- Update product quantity after insert
+delimiter //
+create trigger update_product_quantity
+after insert on orders
+for each row
+begin
+    update product
+    set productquantity = productquantity - new.quantity
+    where productid = new.productid;
+end//
+delimiter ;
+
+-- Update customer order count after order
+delimiter //
+create trigger update_customer_order_count
+after insert on orders
+for each row
+begin
+    update customer
+    set customerordercount = customerordercount + 1
+    where customerid = (
+        select customerid from product where productid = new.productid
+    );
+end//
+delimiter ;
